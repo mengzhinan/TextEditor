@@ -56,6 +56,28 @@ class MainActivity : AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = fileAdapter
         fileAdapter.setData(FileHub.getSubFileList(currentFolder))
+
+        fileAdapter.setOnClickListener { file, isFolder ->
+            if (isFolder) {
+                currentFolder = file
+                fileAdapter.setData(FileHub.getSubFileList(currentFolder))
+            } else {
+                DetailActivity.startActivity(this, file.absolutePath)
+            }
+        }
+        fileAdapter.setOnLongClickListener { file, isFolder ->
+            val message = if (isFolder) {
+                "确定要删除文件夹吗？\n${file.absolutePath}"
+            } else {
+                "确定要删除文件吗？\n${file.absolutePath}"
+            }
+            showConfirmDialog("警告", message) {
+                val isSuccess = FileHub.deleteFiles(file)
+                val msg = if (isSuccess) "删除成功!" else "删除失败!"
+                showToast(msg)
+                fileAdapter.setData(FileHub.getSubFileList(currentFolder))
+            }
+        }
     }
 
     private fun showToast(msg: String) {
@@ -66,11 +88,21 @@ class MainActivity : AppCompatActivity() {
         val view = LayoutInflater.from(this).inflate(R.layout.layout_dialog_input, null)
         val etInput = view.findViewById<EditText>(R.id.et_input)
         val alertDialog = AlertDialog.Builder(this).setTitle(title).setView(view).setNegativeButton(
-            "取消"
-        ) { dialog, which -> dialog?.dismiss() }.setPositiveButton(
-            "确定"
-        ) { dialog, which -> onConfirm(etInput.text.toString()) }
+                "取消"
+            ) { dialog, which -> dialog?.dismiss() }.setPositiveButton(
+                "确定"
+            ) { dialog, which -> onConfirm(etInput.text.toString()) }
         alertDialog.show()
         KeyboardUtil.showKeyboard(view)
+    }
+
+    private fun showConfirmDialog(title: String, message: String, onConfirm: () -> Unit) {
+        val alertDialog =
+            AlertDialog.Builder(this).setTitle(title).setMessage(message).setNegativeButton(
+                    "取消"
+                ) { dialog, which -> dialog?.dismiss() }.setPositiveButton(
+                    "确定"
+                ) { dialog, which -> onConfirm() }
+        alertDialog.show()
     }
 }

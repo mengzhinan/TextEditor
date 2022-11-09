@@ -155,4 +155,35 @@ object FileHub {
         }
     }
 
+    fun deleteFiles(file: String?): Boolean {
+        val filePath = Util.trimAfter(file)
+        if (filePath == null || Util.isNullOrEmpty(filePath)) {
+            return false
+        }
+        return deleteFiles(File(filePath))
+    }
+
+    fun deleteFiles(file: File?): Boolean {
+        file ?: return false
+        try {
+            if (file.isDirectory) {
+                val list = file.listFiles()
+                if (list != null && list.isNotEmpty()) {
+                    for (itemFile: File in list) {
+                        deleteFiles(itemFile)
+                    }
+                }
+            }
+            try {
+                file.delete()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return false
+        }
+        return true
+    }
+
 }

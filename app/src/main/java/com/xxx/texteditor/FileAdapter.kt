@@ -22,6 +22,14 @@ class FileAdapter : RecyclerView.Adapter<VH>() {
     private var onClickListener: ((File, Boolean) -> Unit)? = null
     private var onLongClickListener: ((File, Boolean) -> Unit)? = null
 
+    fun setOnClickListener(l: ((File, Boolean) -> Unit)?) {
+        onClickListener = l
+    }
+
+    fun setOnLongClickListener(l: ((File, Boolean) -> Unit)?) {
+        onLongClickListener = l
+    }
+
     @SuppressLint("NotifyDataSetChanged")
     fun setData(data: ArrayList<File>?) {
         dataList.clear()
