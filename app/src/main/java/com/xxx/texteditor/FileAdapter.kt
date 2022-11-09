@@ -1,158 +1,81 @@
 package com.xxx.texteditor
 
-import android.os.Environment
-import java.io.*
+import android.annotation.SuppressLint
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
+import com.xxx.texteditor.FileAdapter.VH
+import java.io.File
 
 /**
  * @Author: duke
- * @DateTime: 2022-11-09 10:58:13
+ * @DateTime: 2022-11-09 14:27:19
  * @Description: 功能描述：
- *
  */
-class FileAdapter {
+class FileAdapter : RecyclerView.Adapter<VH>() {
 
-    fun getSDCardDownloadFileList(): Array<File>? {
-        val folder = Environment.DIRECTORY_DOWNLOADS
-        val downloadFolder = Environment.getExternalStoragePublicDirectory(folder)
-        return getSubFileList(downloadFolder)
+    private val dataList = ArrayList<File>()
+
+    private var onClickListener: ((File, Boolean) -> Unit)? = null
+    private var onLongClickListener: ((File, Boolean) -> Unit)? = null
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun setData(data: ArrayList<File>?) {
+        dataList.clear()
+        if (data == null || data.isEmpty()) {
+            return
+        }
+        dataList.addAll(data)
+        notifyDataSetChanged()
     }
 
-    fun getSubFileList(baseFolder: File?): Array<File>? {
-        baseFolder ?: return null
-        try {
-            baseFolder.listFiles()
-        } catch (e: Exception) {
-            e.printStackTrace()
+    @SuppressLint("NotifyDataSetChanged")
+    fun setData(array: Array<File>?) {
+        dataList.clear()
+        if (array == null || array.isEmpty()) {
+            return
         }
-        return null
+        dataList.addAll(array)
+        notifyDataSetChanged()
     }
 
-    fun createNewFolder(baseFolder: File?, childFolderName: String?): Boolean {
-        baseFolder ?: return false
-        val folderName = Util.trimAfter(childFolderName)
-        if (childFolderName == null || Util.isNullOrEmpty(folderName)) {
-            return false
-        }
-        val newFile = File(baseFolder, childFolderName)
-        if (newFile.exists()) {
-            return false
-        }
-        try {
-            return newFile.mkdirs()
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-        return false
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item, parent, false)
+        return VH(view)
     }
 
-    fun createNewFile(baseFolder: File?, fileName: String?): Boolean {
-        baseFolder ?: return false
-        val fName = addFileSuffix(fileName)
-        if (fName == null || Util.isNullOrEmpty(fName)) {
-            return false
+    override fun onBindViewHolder(holder: VH, position: Int) {
+        val file = dataList[position]
+        holder.text.text = file.absolutePath
+        if (file.isDirectory) {
+            holder.icon.setImageResource(R.drawable.icon_folder)
+        } else {
+            holder.icon.setImageResource(R.drawable.icon_file)
         }
-        val newFile = File(baseFolder, fName)
-        if (newFile.exists()) {
-            return false
-        }
-        try {
-            newFile.setExecutable(true)
-            newFile.setReadable(true)
-            newFile.setWritable(true)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-        try {
-            return newFile.createNewFile()
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-        return false
-    }
 
-    private fun addFileSuffix(fileName: String?): String? {
-        val fName = Util.trimAfter(fileName) ?: return null
-        val splitList = fName.split("\\.")
-        if (splitList.size - 1 < 0) {
-            return "$fileName.txt"
+        holder.itemView.setOnClickListener {
+            onClickListener?.let { invoke -> invoke(file, file.isDirectory) }
         }
-        return fileName
-    }
-
-    fun readFile(file: File?): String {
-        if (file == null || !file.exists()) {
-            return ""
-        }
-        if (!file.canRead()) {
-            return ""
-        }
-        val sb = StringBuffer()
-        var fis: FileInputStream? = null
-        var isr: InputStreamReader? = null
-        var br: BufferedReader? = null
-
-        try {
-            fis = FileInputStream(file)
-            isr = InputStreamReader(fis)
-            br = BufferedReader(isr)
-            var line: String? = null
-            do {
-                line = br.readLine()
-                // null 为空时，表示指针指向了文件末尾，没有内容了
-                if (line != null) {
-                    sb.append(line)
-                } else {
-                    break
-                }
-            } while (true)
-
-            return sb.toString()
-        } catch (e: Exception) {
-            e.printStackTrace()
-        } finally {
-            closeIO(br)
-            closeIO(isr)
-            closeIO(fis)
-        }
-        return ""
-    }
-
-    fun writeFile(file: File?, content: String?): Boolean {
-        if (file == null || !file.exists()) {
-            return false
-        }
-        if (!file.canWrite()) {
-            return false
-        }
-        var fos: FileOutputStream? = null
-        var osw: OutputStreamWriter? = null
-        var bw: BufferedWriter? = null
-
-        try {
-            // 不追加内容，而是全部覆盖
-            fos = FileOutputStream(file, false)
-            osw = OutputStreamWriter(fos)
-            bw = BufferedWriter(osw)
-            bw.write(content)
-            bw.flush()
-
-            return true
-        } catch (e: Exception) {
-            e.printStackTrace()
-        } finally {
-            closeIO(bw)
-            closeIO(osw)
-            closeIO(fos)
-        }
-        return false
-    }
-
-    private fun closeIO(c: Closeable?) {
-        try {
-            c?.close()
-        } catch (e: Exception) {
-            e.printStackTrace()
+        holder.itemView.setOnLongClickListener {
+            onLongClickListener?.let { invoke -> invoke(file, file.isDirectory) }
+            return@setOnLongClickListener true
         }
     }
 
+    override fun getItemCount(): Int {
+        return dataList.size
+    }
+
+    class VH(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val icon: ImageView
+        val text: TextView
+
+        init {
+            icon = itemView.findViewById(R.id.item_icon)
+            text = itemView.findViewById(R.id.item_text)
+        }
+    }
 }
