@@ -33,20 +33,18 @@ class FileAdapter : RecyclerView.Adapter<VH>() {
     @SuppressLint("NotifyDataSetChanged")
     fun setData(data: ArrayList<File>?) {
         dataList.clear()
-        if (data == null || data.isEmpty()) {
-            return
+        if (data != null && data.isNotEmpty()) {
+            dataList.addAll(data)
         }
-        dataList.addAll(data)
         notifyDataSetChanged()
     }
 
     @SuppressLint("NotifyDataSetChanged")
     fun setData(array: Array<File>?) {
         dataList.clear()
-        if (array == null || array.isEmpty()) {
-            return
+        if (array != null && array.isNotEmpty()) {
+            dataList.addAll(array)
         }
-        dataList.addAll(array)
         notifyDataSetChanged()
     }
 

@@ -175,6 +175,7 @@ object FileHub {
                 }
             }
             try {
+                val iss = file.exists()
                 file.delete()
             } catch (e: Exception) {
                 e.printStackTrace()
