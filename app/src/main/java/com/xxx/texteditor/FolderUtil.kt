@@ -12,7 +12,7 @@ import java.io.OutputStreamWriter
 /**
  * @Author: duke
  * @DateTime: 2022-11-08 13:30:45
- * @Description: 功能描述：
+ * @Description: 功能描述：文件目录 对比 工具类
  *
  * # /data/user/0/ <<等同于>> /data/data/
  * context.dataDir =          /data/user/0/com.xxx.aaaaaaaa，            canWrite = true

@@ -20,7 +20,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private val fileAdapter: FileAdapter = FileAdapter()
 
-    private val rootFolder: File = FileCenter.getSDCardDownloadFolder()
+    private val rootFolder: File = FileHub.getSDCardDownloadFolder()
     private var currentFolder: File? = rootFolder
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,31 +30,32 @@ class MainActivity : AppCompatActivity() {
         createFolderBtn = findViewById(R.id.btn_create_folder)
         createFolderBtn.setOnClickListener {
             showInputDialog("创建文件夹") {
-                FileCenter.createNewFolder(currentFolder, it)
-                fileAdapter.setData(FileCenter.getSubFileList(currentFolder))
+                FileHub.createNewFolder(currentFolder, it)
+                fileAdapter.setData(FileHub.getSubFileList(currentFolder))
             }
         }
         createFileBtn = findViewById(R.id.btn_create_file)
         createFileBtn.setOnClickListener {
             showInputDialog("创建文件") {
-                FileCenter.createNewFile(currentFolder, it)
-                fileAdapter.setData(FileCenter.getSubFileList(currentFolder))
+                FileHub.createNewFile(currentFolder, it)
+                fileAdapter.setData(FileHub.getSubFileList(currentFolder))
             }
         }
         backBtn = findViewById(R.id.btn_back)
         backBtn.setOnClickListener {
             if ((currentFolder?.absolutePath ?: "") == (rootFolder.absolutePath ?: "")) {
                 showToast("已经是根目录了")
+                fileAdapter.setData(FileHub.getSubFileList(currentFolder))
                 return@setOnClickListener
             }
             currentFolder = currentFolder?.parentFile
+            fileAdapter.setData(FileHub.getSubFileList(currentFolder))
         }
 
         recyclerView = findViewById(R.id.file_recycler_view)
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = fileAdapter
-
-        fileAdapter.setData(FileCenter.getSubFileList(currentFolder))
+        fileAdapter.setData(FileHub.getSubFileList(currentFolder))
     }
 
     private fun showToast(msg: String) {
@@ -70,5 +71,6 @@ class MainActivity : AppCompatActivity() {
             "确定"
         ) { dialog, which -> onConfirm(etInput.text.toString()) }
         alertDialog.show()
+        KeyboardUtil.showKeyboard(view)
     }
 }

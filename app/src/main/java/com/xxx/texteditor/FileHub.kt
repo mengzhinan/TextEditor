@@ -6,10 +6,10 @@ import java.io.*
 /**
  * @Author: duke
  * @DateTime: 2022-11-09 10:58:13
- * @Description: 功能描述：
+ * @Description: 功能描述：Demo 工程文件逻辑处理类
  *
  */
-object FileCenter {
+object FileHub {
 
     fun getSDCardDownloadFolder(): File {
         val folder = Environment.DIRECTORY_DOWNLOADS
