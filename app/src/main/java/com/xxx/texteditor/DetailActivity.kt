@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import java.io.File
 
@@ -19,6 +20,7 @@ class DetailActivity : AppCompatActivity() {
         }
     }
 
+    private lateinit var tvCurrentPath: TextView
     private lateinit var btnSaveExit: Button
     private lateinit var btnExit: Button
     private lateinit var etContent: EditText
@@ -35,6 +37,9 @@ class DetailActivity : AppCompatActivity() {
             finish()
             return
         }
+
+        tvCurrentPath = findViewById(R.id.tv_current_path)
+        tvCurrentPath.text = filePath
 
         btnSaveExit = findViewById(R.id.btn_save_exit)
         btnSaveExit.setOnClickListener {

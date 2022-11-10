@@ -43,6 +43,17 @@
 
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/tv_current_path"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="#80AAAAAA"
+        android:gravity="center_vertical"
+        android:paddingLeft="5dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ll_top_container" />
+
     <EditText
         android:id="@+id/et_content"
         android:layout_width="match_parent"
@@ -55,6 +66,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ll_top_container" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_current_path" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
