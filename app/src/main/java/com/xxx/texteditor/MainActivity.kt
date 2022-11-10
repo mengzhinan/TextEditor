@@ -95,14 +95,14 @@ class MainActivity : AppCompatActivity() {
             } else {
                 "确定要删除文件吗？\n${file.absolutePath}"
             }
-            showConfirmDialog("警告", message) {
-                val isSuccess = FileHub.deleteFiles(file)
-                val msg = if (isSuccess) "删除成功!" else "删除失败!"
-                Util.showToast(this, msg)
-                fileAdapter.setData(FileHub.getSubFileList(currentFolder)) { hasDataBoolean ->
-                    hasData(hasDataBoolean)
-                }
-            }
+//            showConfirmDialog("警告", message) {
+//                val isSuccess = FileHub.deleteFiles(file)
+//                val msg = if (isSuccess) "删除成功!" else "删除失败!"
+//                Util.showToast(this, msg)
+//                fileAdapter.setData(FileHub.getSubFileList(currentFolder)) { hasDataBoolean ->
+//                    hasData(hasDataBoolean)
+//                }
+//            }
         }
     }
 
