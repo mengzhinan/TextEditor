@@ -1,4 +1,4 @@
-package com.xxx.aaaaaaaa
+package com.xxx.texteditor
 
 import android.content.Context
 import android.os.Build

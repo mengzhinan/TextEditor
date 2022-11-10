@@ -6,7 +6,6 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -59,7 +58,7 @@ class MainActivity : AppCompatActivity() {
                 // 尝试重新赋值，获取最新的 list
                 currentFolder = FileHub.getSDCardDownloadFolder()
                 tvTopCurrentPath.text = currentFolder?.absolutePath ?: ""
-                showToast("已经是根目录了")
+                Util.showToast(this, "已经是根目录了")
                 fileAdapter.setData(FileHub.getSubFileList(currentFolder)) { hasDataBoolean ->
                     hasData(hasDataBoolean)
                 }
@@ -99,7 +98,7 @@ class MainActivity : AppCompatActivity() {
             showConfirmDialog("警告", message) {
                 val isSuccess = FileHub.deleteFiles(file)
                 val msg = if (isSuccess) "删除成功!" else "删除失败!"
-                showToast(msg)
+                Util.showToast(this, msg)
                 fileAdapter.setData(FileHub.getSubFileList(currentFolder)) { hasDataBoolean ->
                     hasData(hasDataBoolean)
                 }
@@ -109,10 +108,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun hasData(hasListData: Boolean) {
         tvNoData.visibility = if (hasListData) View.GONE else View.VISIBLE
-    }
-
-    private fun showToast(msg: String) {
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
     }
 
     private fun showInputDialog(title: String, onConfirm: (String) -> Unit) {
