@@ -30,21 +30,24 @@ class FileAdapter : RecyclerView.Adapter<VH>() {
         onLongClickListener = l
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-    fun setData(data: ArrayList<File>?) {
-        dataList.clear()
-        if (data != null && data.isNotEmpty()) {
-            dataList.addAll(data)
-        }
-        notifyDataSetChanged()
-    }
+//    @SuppressLint("NotifyDataSetChanged")
+//    fun setData(data: ArrayList<File>?, hasData:(Boolean)->Unit) {
+//        dataList.clear()
+//        if (data != null && data.isNotEmpty()) {
+//            dataList.addAll(data)
+//        }
+//        notifyDataSetChanged()
+//    }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun setData(array: Array<File>?) {
+    fun setData(array: Array<File>?, hasData: (Boolean) -> Unit) {
+        // 先清空数据，再添加
         dataList.clear()
         if (array != null && array.isNotEmpty()) {
             dataList.addAll(array)
         }
+        // 最终无论有没有数据，都需要是刷新页面
+        hasData(dataList.size > 0)
         notifyDataSetChanged()
     }
 

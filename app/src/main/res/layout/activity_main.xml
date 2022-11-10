@@ -6,6 +6,17 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <TextView
+        android:id="@+id/tv_current_path"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="#80888888"
+        android:gravity="center_vertical"
+        android:paddingLeft="5dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/file_recycler_view"
         android:layout_width="match_parent"
@@ -13,7 +24,21 @@
         app:layout_constraintBottom_toTopOf="@+id/ll_bottom_container"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_current_path" />
+
+    <TextView
+        android:id="@+id/tv_no_data"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="#80DCDCDC"
+        android:gravity="center_horizontal"
+        android:paddingTop="20dp"
+        android:text="好像没有查询到内容"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/ll_bottom_container"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_current_path" />
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/ll_bottom_container"
