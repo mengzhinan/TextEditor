@@ -72,7 +72,7 @@ object FileHub {
 
     private fun addFileSuffix(fileName: String?): String? {
         val fName = Util.trimAfter(fileName) ?: return null
-        val splitList = fName.split("\\.")
+        val splitList = fName.split(".")
         if (splitList.size - 2 < 0) {
             return "$fileName.txt"
         }
